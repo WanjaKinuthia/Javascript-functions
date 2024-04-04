@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Grades with Filter</title>
+<style>
+    .student {
+        border: 1px solid #ddd;
+        margin-bottom: 10px;
+        padding: 10px;
+    }
+    .student h3 {
+        font-weight: bold;
+    }
+    .grade {
+        font-weight: bold;
+    }
+    .passed {
+        color: green;
+    }
+    .failed {
+        color: red;
+    }
+</style>
+</head>
+<body>
+<h1>Student Grades</h1>
+
+<div id="students"></div>
+<br>
+<label for="passmark">Pass Mark:</label>
+<input type="number" id="passmark" value="60">
+<button onclick="filterStudents()">Filter</button>
+
+<script>
+// Define a student object structure
+const students = [
+  { name: "Alice", score: 85 },
+  { name: "Bob", score: 72 },
+  { name: "Charlie", score: 98 },
+  { name: "David", score: 60 },
+  { name: "Eve", score: 55 },
+];
+
+// Function to calculate letter grade based on score
+function calculateGrade(score) {
+  if (score >= 90) {
+    return "A";
+  } else if (score >= 80) {
+    return "B";
+  } else if (score >= 70) {
+    return "C";
+  } else if (score >= 60) {
+    return "D";
+  } else {
+    return "F";
+  }
+}
+
+// Function to display a student with name, score, and grade
+function displayStudent(student, passmark) {
+  const gradeClass = student.score >= passmark ? "passed" : "failed";
+  return `
+    <div class="student">
+      <h3>${student.name}</h3>
+      <p>Score: ${student.score}</p>
+      <p class="grade ${gradeClass}">Grade: ${calculateGrade(student.score)}</p>
+    </div>
+  `;
+}
+
+// Function to display all students with grades
+function displayAllStudents(students) {
+  const studentList = document.getElementById('students');
+  studentList.innerHTML = students.map(student => displayStudent(student)).join('');
+}
+
+// Function to filter students by passmark using a loop (not recommended for filter functions)
+function filterStudents() {
+  const passmark = parseInt(document.getElementById('passmark').value);
+  const filteredStudents = [];
+  for (let i = 0; i < students.length; i++) {
+    const student = students[i];
+    if (student.score >= passmark) {
+      filteredStudents.push(student);
+      // Additional condition to surpass (not recommended practice)
+      if (student.score > passmark + 5) { // Example: Show only those who surpass by 5 points
+        console.log(student.name + " surpassed the pass mark by " + (student.score - passmark) + " points.");
+      }
+    }
+  }
+  displayAllStudents(filteredStudents);
+}
+
+// Display all students with grades initially
+displayAllStudents(students); // Change 60 to your desired default passmark
+</script>
+</body>
+</html>
